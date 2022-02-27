@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { NavBar, Toast} from 'antd-mobile'
+import {Toast} from 'antd-mobile'
 import {List, AutoSizer} from 'react-virtualized';
 import './index.scss'
 import axios from 'axios'
 import { getCurrentCity } from '../../utils'
+import NavHeader from '../../component/NavHeader';
 
 
 const mainCity = ["北京", "上海", "广州", "深圳"]
@@ -44,7 +45,6 @@ export default class CityList extends Component {
         let {cityList, cityIndex} = this.formatCityData(res.data.body);
         const hotRes = await axios.get("http://localhost:8080/area/hot");
         cityList['hot'] = hotRes.data.body;
-        // const curCity = await getCurrentCity()
         let curCity = null;
         await getCurrentCity().then((res)=>{
             // curCity = res;
@@ -117,11 +117,8 @@ export default class CityList extends Component {
         const {startIndex} = this.state;
         return (
             <div className='citylist'>
-                <NavBar 
-                    icon={<i className="iconfont icon-back"/>}
-                    className='navbar'
-                    onClick = {()=>{this.props.history.go(-1)}}
-                    >城市列表</NavBar>
+
+                <NavHeader>城市列表</NavHeader>
                     
                 <AutoSizer>
                     {
