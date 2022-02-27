@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { NavBar} from 'antd-mobile'
+import { NavBar, Toast} from 'antd-mobile'
 import {List, AutoSizer} from 'react-virtualized';
 import './index.scss'
 import axios from 'axios'
 import { getCurrentCity } from '../../utils'
 
+
+const mainCity = ["北京", "上海", "广州", "深圳"]
 export default class CityList extends Component {
 
     state = {
@@ -68,6 +70,15 @@ export default class CityList extends Component {
         })
     }
 
+    selectCity = (item) => {
+        if(mainCity.includes(item.label)){
+            localStorage.setItem('hkzf_city', JSON.stringify({label:item.label, value:item.value}));
+            this.props.history.go(-1);
+        }else {
+            Toast.info('该城市暂无房源数据', 2, null, false);
+        }
+    }
+
     rowRenderer = ({
         key, // Unique key within array of rows
         index, // Index of row within collection
@@ -83,7 +94,7 @@ export default class CityList extends Component {
                 <div className='city-specific'>
                     {
                         cityList[letter].map((item) => {
-                            return <div>{item.label}</div>
+                            return <div onClick = {()=>this.selectCity(item)}>{item.label}</div>
                         })
                     }
                 </div>
@@ -109,6 +120,7 @@ export default class CityList extends Component {
                 <NavBar 
                     icon={<i className="iconfont icon-back"/>}
                     className='navbar'
+                    onClick = {()=>{this.props.history.go(-1)}}
                     >城市列表</NavBar>
                     
                 <AutoSizer>

@@ -147,6 +147,7 @@ export default class Index extends Component {
     }
 
     render() {
+        let city = JSON.parse(localStorage.getItem('hkzf_city'));
         const {isSwipperLoader} = this.state;
         return (
             <div>
@@ -165,7 +166,7 @@ export default class Index extends Component {
                      <div className='search-wrapper'>
                         <div className='search-info'>
                             <div className='search-city' onClick={()=>{this.props.history.push('/citylist')}}>
-                                <span>济南</span>
+                                <span>{city.label}</span>
                                 <i className='iconfont icon-arrow'></i>
                             </div>
                             <span className='delimiter'>|</span>
