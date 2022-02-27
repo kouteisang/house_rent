@@ -5,6 +5,7 @@ import { BrowserRouter as Router,
 
 import CityList from './pages/CityList';
 import Home from './pages/Home';
+import Map from './pages/Map'
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Switch>
           <Route path='/home' component={Home}></Route>
           <Route path='/citylist' component={CityList}></Route>
+          <Route path='/map' component={Map}></Route>
           <Redirect path='/' to='/home'></Redirect>
         </Switch>
       </div>

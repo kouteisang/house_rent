@@ -147,7 +147,7 @@ export default class Index extends Component {
     }
 
     render() {
-        const {isSwipperLoader, group} = this.state;
+        const {isSwipperLoader} = this.state;
         return (
             <div>
                 {/* carousel part */}
@@ -174,7 +174,7 @@ export default class Index extends Component {
                                 <span>请输入小区或地址</span>
                             </div>
                         </div>
-                        <i className='iconfont icon-map'></i>
+                        <i className='iconfont icon-map' onClick = {()=>{this.props.history.push('/map')}}></i>
                     </div>
                 </div>
                 {/* middle nav */}
