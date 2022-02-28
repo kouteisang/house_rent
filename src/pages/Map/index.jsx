@@ -4,8 +4,15 @@ import NavHeader from '../../component/NavHeader';
 import styles from './index.module.css'
 import './index.scss'
 
+import pic from '../../assets/images/7bk85cak9.jpeg'
+
 export default class Map extends Component {
 
+
+    state = {
+        houseList:[],
+        isShow:false
+    }
 
     componentDidMount(){
         this.initMap();
@@ -17,7 +24,6 @@ export default class Map extends Component {
         const map = new window.BMapGL.Map("container");
         this.map = map;
         let {label, value} = JSON.parse(localStorage.getItem("hkzf_city"));
-        console.log(label, value)
         const myGeo = new window.BMapGL.Geocoder();
         const scaleCtrl = new window.BMapGL.ScaleControl();
         const zoomCtrl = new window.BMapGL.ZoomControl();
@@ -31,6 +37,12 @@ export default class Map extends Component {
                 alert('您选择的地址没有解析到结果！');
             }
         }, label)
+
+        map.addEventListener('movestart', ()=>{
+            if(this.state.isShow == true){
+                this.setState({isShow:false});
+            }
+        })
     }
 
 
@@ -67,9 +79,46 @@ export default class Map extends Component {
         return {nextZoom, type};
     }
 
+    getHouseList = async (value) => {
+        const res = await axios.get(`http://localhost:8080/houses?cityId=${value}`);
+        console.log(res.data.body.list)
+        this.setState({houseList:res.data.body.list, isShow:true});
+    }
+
+    renderHouseList = () => {
+        const {houseList} = this.state;
+        return houseList.map((item) => {
+            const {tags} = item;
+            console.log(tags)
+            return (
+                <div className='house-items' key={item.houseCode}>
+                    <img src={`http://localhost:8080${item.houseImg}`} alt="" />
+                    <div className='items'>
+                        <p className='title'>{item.title}</p>
+                        <p className="info">{item.desc}</p>
+                        <div>
+                            {
+                                tags.map((tag, index)=>{
+                                    index = index % 3 + 1;
+                                    let cn = "tag"+index;
+                                    return (
+                                        <span className={cn}>{tag}</span>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div className='price'>
+                            <span>{item.price}</span>
+                            <span>元/月</span>
+                        </div>
+                    </div>
+                </div>
+            )
+        })
+    }
+
     createOverlays = (element, nextZoom, type) => {
         const {coord:{latitude, longitude}} = element;
-        console.log(element)
         const positionPoint = new window.BMapGL.Point(longitude,latitude);
         const opts = {
                 position: positionPoint, // 指定文本标注所在的地理位置
@@ -84,8 +133,10 @@ export default class Map extends Component {
         if(type == "circle"){
             label.setContent(`
             <div class="${styles.circle}">
-                <p class="${styles.title}">${element.label}</p>
-                <p class="${styles.number}">${element.count}套</p>
+                <div class="${styles.pos}">
+                    <p class="${styles.labelName}">${element.label}</p>
+                    <p >${element.count}套</p>
+                </div>
             <div>
         `)
             label.addEventListener('click', ()=>{
@@ -103,6 +154,9 @@ export default class Map extends Component {
                 <div>
                 `
             )
+            label.addEventListener('click', ()=>{
+                this.getHouseList(element.value);
+            })
         }
         this.map.addOverlay(label)
 
@@ -110,12 +164,27 @@ export default class Map extends Component {
     }
 
     render() {
+        const {isShow} = this.state;
         return (
             <div className='map'>
 
                 <NavHeader>地图找房</NavHeader>
 
                 <div id='container'></div>
+
+            
+                {/* <div className={`${isShow ? ' house-info' :' '}`}> */}
+                <div className={`house-info ${isShow ? ' show': ''}`}>
+                    <div className='house-info-title'>
+                        <span>房屋列表</span>
+                        <span>更多房源</span>
+                    </div>
+                    {
+                        this.renderHouseList()
+                    }
+                </div>
+            
+
             </div>
         )
     }

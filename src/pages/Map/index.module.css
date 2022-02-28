@@ -3,12 +3,21 @@
     background: rgba(12, 181, 106, 0.9);
     height: 70px;
     width: 70px;
-    text-align: center;
-    vertical-align: middle;
     border: 2px solid rgba(255, 255, 255, 0.8);
     cursor: pointer;
     color: #fff;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+   
+}
 
+.pos{
+    padding-top: 15px;
+}
+
+.labelName{
+    padding-bottom: 5px;
 }
 
 .rect{
@@ -27,8 +36,14 @@
     border-bottom: 7px solid transparent;
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
-    left: 50%;
-    right: 50%;
-
-    
+    left: 45%;
+    right: 65%;
+    margin-top: -2px;
 }
+
+/* .title{
+    vertical-align: middle;
+}
+.number{
+    vertical-align: middle;
+} */
